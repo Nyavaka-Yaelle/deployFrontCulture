@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.mongodb.client.MongoClient;
+// import com.mongodb.client.MongoClient;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,7 +42,7 @@ public class DBController {
         return response;
     }
 
-    @GetMapping("/mongo")
+    /*@GetMapping("/mongo")
     public String getMongoDBInfo() {
         String response = "";
         try {
@@ -53,5 +53,5 @@ public class DBController {
             return "Error connecting to database: " + e.getMessage();
         }
         return response;
-    }
+    }*/
 }

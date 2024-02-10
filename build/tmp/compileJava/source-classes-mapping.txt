@@ -30,8 +30,6 @@ com/example/client/service/connection/EConnection.java
  com.example.client.service.connection.EConnection
 com/example/client/service/terrain/TerrainService.java
  com.example.client.service.terrain.TerrainService
-com/example/client/configuration/SecondaryDataSourceConfig.java
- com.example.client.configuration.SecondaryDataSourceConfig
 com/example/client/controller/culture/CultureController.java
  com.example.client.controller.culture.CultureController
 com/example/client/controller/util/DBController.java
@@ -62,8 +60,6 @@ com/example/client/model/util/Generalite.java
  com.example.client.model.util.Generalite
 com/example/client/controller/terrain/TerrainController.java
  com.example.client.controller.terrain.TerrainController
-com/example/client/configuration/MongoDBConfiguration.java
- com.example.client.configuration.MongoDBConfiguration
 com/example/client/model/parcelle/ParcelleModele.java
  com.example.client.model.parcelle.ParcelleModele
 com/example/client/service/culture/TypeCultureService.java

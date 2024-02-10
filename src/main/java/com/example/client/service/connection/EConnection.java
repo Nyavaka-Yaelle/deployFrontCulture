@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.mongodb.client.MongoClient;
+// import com.mongodb.client.MongoClient;
 
 @Service
 public class EConnection {
@@ -18,26 +18,29 @@ public class EConnection {
     @Autowired
     @Qualifier("primaryDataSource") //bean configuration.PrimaryDataSource
     private DataSource primaryDataSource;
-
+    /*@Autowired
+    private MongoDBConfiguration mongoDBConf;
+    
     @Autowired
     @Qualifier("secondaryDataSource") //bean configuration.SecondaryDataSource
     private DataSource secondaryDataSource;
+    */
     
-    @Autowired
-    private MongoDBConfiguration mongoDBConf;
 
     public Connection getConnection() throws SQLException {
-        // return primaryDataSource.getConnection();
-        return secondaryDataSource.getConnection();
+        return primaryDataSource.getConnection();
+        // return secondaryDataSource.getConnection();
 
     }
 
     public Connection getConnectionRailway() throws SQLException {
-        return secondaryDataSource.getConnection();
+        // return secondaryDataSource.getConnection();
+        return primaryDataSource.getConnection();
+
     }
 
-    public MongoClient getMongoClient() {
+   /* public MongoClient getMongoClient() {
         return mongoDBConf.mongoClient();
-    }
+    }*/
 }
 
