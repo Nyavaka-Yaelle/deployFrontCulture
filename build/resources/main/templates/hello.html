@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+</head>
+<body>
+    <container>
+        <div class="blank">
+        </div>
+        <div class="menu">
+            <nav>
+                <ul>
+                    <a href="#" class="menu-item active"><li>Produits</li></a>
+                    <a href="#"><li>Type</li></a>
+                    <a href="#"><li>Categorie</li></a>
+                    <a href="#"><li>Entite Produit</li></a>
+                </ul>
+            </nav>
+            <div class="clip-border"><img src="" alt=""></div>
+            <div class="clip-border radius"><img src="" alt=""></div>
+            <div class="big-img">
+                <h3 th:text="${message}"></h3>
+
+                <table border="1">
+                    <tr>
+                        <th>id</th>
+                        <th>Type</th>
+                    </tr>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.getIdTypeCulture()}"></td>
+                        <td th:text="${product.getNomTypeCulture()}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="full">
+            <section id="signin">
+                
+                <span class="fas fa-times gradient"></span>
+                <div class="img">
+                    <span class="round" style="animation: slide-left-opaque 0.3s ease-in-out"></span>
+                    <span class="round" style="animation: slide-left-opaque 0.6s ease-in-out"></span>
+                    <span class="round" style="animation: slide-left-opaque 0.9s ease-in-out"></span>
+                    <span class="round" style="animation: slide-left-opaque 1.2s ease-in-out"></span>
+                </div>
+                
+            </section>
+        </div>
+    </container>
+</body>
+</html>

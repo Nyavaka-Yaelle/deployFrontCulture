@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <!-- enctype="application/json" -->
+            <form id="loginForm">
+                <h2>Login</h2>
+                <p id="error">
+                    <!-- Error, account not found -->
+                </p>
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="motDePasse" required>
+                </div>
+                <button type="submit">Sign in</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêche la soumission du formulaire par défaut
+
+        // Récupère les valeurs des champs du formulaire
+        const email = document.getElementById('username').value;
+        const motDePasse = document.getElementById('password').value;
+        var errorDiv = document.getElementById('error');
+
+        // Construit un objet JSON avec les données du formulaire
+        const formData = {
+            email: email,
+            motDePasse: motDePasse
+        };
+
+        // Envoie les données du formulaire au backend Spring Boot en tant que JSON
+        fetch('/utilisateurs/loginAdmin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Renvoie les données JSON du backend
+            } else {
+                error.innerHTML = "Error, try again";
+                throw new Error('huhu Error logging in');
+            }
+        })
+        .then(data => {
+            // Traite les données JSON renvoyées par le backend
+            console.log(data);
+            window.location.replace("/dashboard");
+        })
+        .catch(error => {
+           // console.error('Error:', error);
+            errorDiv.classList.add("error");
+            errorDiv.style.display = "block";
+            errorDiv.innerHTML = "Error, try again";
+        });
+    });
+</script>

@@ -1,0 +1,2 @@
+com/example/client/ClientApplicationTests.java
+ com.example.client.ClientApplicationTests

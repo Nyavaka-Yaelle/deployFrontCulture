@@ -1,0 +1,75 @@
+<div th:class="'dashboard bgcolored-alt'">
+            
+    <form  id="addNewCultureForm">
+        <h2>Add New Culture</h2>
+        <p id="error">
+        </p>
+        <div th:class="input-group">
+            <label for="nomCulture">Nom Culture</label>
+            <input type="text" th:id="nomCulture" name="nomCulture" required>
+        </div>
+        <div th:class="input-group">
+            <label for="typeCulture">Type culture</label>
+            <select name="idTypeCulture" id="idTypeCulture">
+                <th:block th:each="typeCulture, iterStat : ${typeCultures}">
+                    <option th:value="${typeCulture.getIdTypeCulture()}">
+                        <span th:text="${typeCulture.getNomTypeCulture()}"></span>
+                    </option>
+                </th:block>
+            </select>
+        </div>
+        <div th:class="input-group">
+            <label for="tempsCroissance">Temps croissance</label>
+            <input type="number" min="0" th:id="tempsCroissance" name="tempsCroissance" required>
+        </div>
+        <button type="submit" style="margin:0 auto;width: 95%;">OK</button>
+    </form>
+    <!-- <canvas th:id="salesChart" width="400" height="400"></canvas> -->
+</div>
+<script>
+    document.getElementById('addNewCultureForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêche la soumission du formulaire par défaut
+
+        // Récupère les valeurs des champs du formulaire
+        const nomCulture = document.getElementById('nomCulture').value;
+        const idTypeCulture= document.getElementById('idTypeCulture').value;
+        const tempsCroissance = document.getElementById('tempsCroissance').value;
+        var errorDiv = document.getElementById('error');
+
+        // Construit un objet JSON avec les données du formulaire
+        const formData = {
+            nomCulture: nomCulture,
+            typeCulture: {idTypeCulture: idTypeCulture},
+            tempsCroissance: tempsCroissance
+        };
+
+        // Envoie les données du formulaire au backend Spring Boot en tant que JSON
+        fetch('/cultures', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Renvoie les données JSON du backend
+            } else {
+                error.innerHTML = "Error, try again";
+                throw new Error('huhu Error try again');
+            }
+        })
+        .then(data => {
+            // Traite les données JSON renvoyées par le backend
+            console.log(data);
+            window.location.replace("/dashboard/cultures");
+        })
+        .catch(error => {
+           // console.error('Error:', error);
+            errorDiv.classList.add("error");
+            errorDiv.style.width = "100%";
+            errorDiv.style.display = "block";
+            errorDiv.innerHTML = "Error, try again";
+        });
+    });
+</script>

@@ -1,0 +1,187 @@
+        <div th:class="section-table">
+            <div id="errorDelete"></div>
+            <!-- <div th:id="Terrains" th:data-value="${Terrains}"></div> -->
+            <input type="hidden" name="mytoken" id="mytoken" th:value="${generalite.generateRandomString()}">
+            <div th:class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id&nbsp;Terrain</th>
+                            <th>Nom&nbsp;Terrain</th>
+                            <th>Nb&nbsp;Parcelle</th>
+                            <th>Geolocalisation</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <script>/*
+                        <th:block th:each="Terrain, iterStat : ${Terrains}">
+                            <tr th:class="${iterStat.index % 2 == 0 ? 'even' : 'odd'}">
+                                <td th:text="${Terrain.getIdTerrain()}"></td>
+                                <td th:text="${Terrain.getNomTerrain()}"></td>
+                                <td><button th:class="table-button">
+                                    Edit
+                                </button></td>
+                                <td><button th:id="'deleteButton-' + ${Terrain.getIdTerrain()}" th:class="'table-button delete-button'"
+                                th:data-id="${Terrain.getIdTerrain()}"  onclick="addIdToDelete(this.getAttribute('data-id'))">
+                                    delete
+                                </button></td>
+                            </tr>
+                        </th:block>*/
+                        </script>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div th:class="pagination">
+                <button th:class="prev"><</button>
+                <span th:class="page-info">Page 1 sur 1</span>
+                <button th:class="next">></button>
+            </div>
+        </div>
+
+<script th:inline="javascript">
+
+    // Sélection de l'élément tbody
+    const tbody = document.querySelector('tbody');
+    const deleteButtons = document.querySelectorAll('.delete-button');
+        const confirmationPopup = document.getElementById('confirmationPopup');
+        const cancelButton = document.getElementById('cancelButton');
+        const confirmButton = document.getElementById('confirmButton');
+    var errorDel = document.getElementById('errorDelete');
+    let mytoken = document.getElementById('mytoken');
+        
+    let TerrainIdToDelete;
+
+    // Nombre de lignes par page
+    const rowsPerPage = 5;
+
+    // Page actuelle
+    let currentPage = 1;
+
+    window.onload = function() {
+        fetchTerrains();
+    };
+    function editForm(id) {
+        // console.log("edit: " + id);
+        // Effectuer une requête AJAX pour récupérer le contenu de la page
+        // fetch('/file/content')
+        //     .then(response => response.text())
+        //     .then(data => {
+        //         // Injecter le contenu du fichier dans l'élément avec l'id "fileContent"
+        //         document.getElementById('fileContent').innerHTML = data;
+        //     })
+        //     .catch(error => {
+        //         console.error('Erreur lors de la récupération du contenu du fichier:', error);
+        //     });
+    }
+
+    
+    function fetchTerrains() {
+        fetch('/terrains', {
+            method: 'GET'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau : ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Manipuler les données JSON ici, par exemple :
+            console.log('Contenu JSON retourné :', data);
+            for (let i = 0; i < data.length; i++) {
+                const tr = document.createElement('tr');
+                tr.classList.add((i%2!=0)? 'even':'odd');
+                tr.innerHTML = `
+                    <td>${data[i].idTerrain}</td>
+                    <td>${data[i].nomTerrain}</td>
+                     <td>${data[i].nbParcelle}</td>
+                     <td>${data[i].geolocalisation}</td>
+                    <td><a href="/dashboard/terrains/${mytoken.value+data[i].idTerrain}"><button class="table-button">Edit</button></a></td>
+                    <td><button id="'deleteButton-' + ${data[i].idTerrain}" class="table-button delete-button"
+                    data-id="${data[i].idTerrain}"  onclick="addIdToDelete(this.getAttribute('data-id'))">
+                        <span>
+                            <svg  width="20px" id="Calque_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45.83 52.01">
+                                <path class="cls-1" d="M43.53,5.23h-13.28V2.62c0-1.45-1.17-2.62-2.61-2.62h-9.58c-1.44,0-2.62,1.17-2.62,2.62v2.61H2.3c-1.27,0-2.3,1.03-2.3,2.3v1.28c0,1,.64,1.85,1.54,2.17l42.63,.04c.96-.27,1.66-1.16,1.66-2.21v-1.28c0-1.27-1.03-2.3-2.3-2.3Zm-15.64,0h-10.08v-1.87c0-.5,.4-.9,.9-.9h8.27c.5,0,.91,.41,.91,.91v1.86Z"/>
+                                <path class="cls-1" d="M39.46,13.66H6.22c-.78,0-1.38,.68-1.29,1.45l3.75,32.54c.29,2.48,2.4,4.36,4.9,4.36h18.42c2.5,0,4.6-1.87,4.9-4.35l3.86-32.54c.09-.78-.52-1.46-1.3-1.46Zm-21.59,31.98c-.91,.15-1.76-.47-1.9-1.37l-4.19-26.48c-.15-.91,.47-1.76,1.37-1.9,.09-.02,.18-.02,.27-.02,.8,0,1.5,.58,1.63,1.4l4.2,26.48c.14,.9-.48,1.75-1.38,1.89Zm6.7-1.57c0,.83-.56,1.59-1.37,1.73-1.03,.18-1.95-.61-1.95-1.63V17.45c0-.83,.57-1.6,1.39-1.73,1.04-.16,1.93,.64,1.93,1.64v26.71Zm9.48-26.28l-4.19,26.48c-.15,.9-1,1.52-1.9,1.37-.91-.14-1.52-.99-1.38-1.89l4.19-26.48c.15-.91,1-1.53,1.9-1.38,.82,.13,1.4,.83,1.4,1.64,0,.09-.01,.17-.02,.26Z"/>
+                            </svg>
+                        </span>
+                    </button></td>
+                `;
+                tbody.appendChild(tr);
+            }
+            // Vous pouvez remplacer la console.log par tout traitement que vous souhaitez effectuer avec les données.
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des Terrains:', error);
+            // Gérer les erreurs ici, par exemple :
+            // alert('Erreur lors de la récupération des s de Terrains: ' + error.message);
+        });
+    }
+
+
+    cancelButton.addEventListener('click', function() {
+        // Cacher le pop-up de confirmation si l'utilisateur clique sur "Annuler"
+        confirmationPopup.style.display = 'none';
+    });
+
+    function addIdToDelete(id) {
+        TerrainIdToDelete = id;
+        // Afficher le pop-up de confirmation
+        document.getElementById('labelSuppress').innerHTML = "Type \"confirm deletion\" to delete "+TerrainIdToDelete;
+        confirmationPopup.style.display = 'block';
+    }
+    document.getElementById('confirmationPopup').addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêche la soumission du formulaire par défaut
+            // Récupérer la valeur entrée par l'utilisateur dans l'input
+            var confirmationInputValue = document.querySelector('#confirmationPopup input[name="confirmationInput"]').value;
+
+            // Cacher le pop-up de confirmation si l'utilisateur clique sur "Confirmer"
+            confirmationPopup.style.display = 'none';
+
+            // Effectuer l'action de suppression avec l'ID récupéré si la valeur correspond à la confirmation attendue
+            if (confirmationInputValue === 'confirm deletion') {
+                if (TerrainIdToDelete) {
+                    functionDelete(TerrainIdToDelete);
+                }
+        }
+        else{
+            errorDel.classList.add("error");
+            errorDel.style.width = "80%";
+            errorDel.style.display = "block";
+            errorDel.style.marginBottom = "20px";
+            errorDel.innerHTML = "Error,Type  'confirm deletion' to delete";
+        }
+    });
+    function functionDelete(id) {
+        console.log(id);
+    //    /* 
+    //    if (confirm("Are you sure you want to delete this item?")) {
+            const formData = {
+                idTerrain: id
+            };
+
+            fetch('/terrains', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                else if(response.ok) window.location.replace("/dashboard/terrains");
+                // Gérer la réponse en fonction de vos besoins
+            })
+            .catch(error => {
+                console.error('There was a problem with your fetch operation:', error);
+                // Gérer les erreurs en fonction de vos besoins
+            });
+        // }
+            // fetchTerrains();
+    }
+</script>

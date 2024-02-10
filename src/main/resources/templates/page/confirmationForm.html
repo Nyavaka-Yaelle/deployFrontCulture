@@ -1,0 +1,14 @@
+<form th:id="confirmationPopup" th:class="popup">
+    <div th:class="'popup-content bgcolored'">
+        <h2>Confirmer la suppression</h2>
+        <div th:class="input-group">
+            <label id="labelSuppress"></label>
+            <input type="text" name="confirmationInput" placeholder="confirm deletion">
+
+        </div>
+        <div th:class="button-wrap">
+            <button th:id="cancelButton" th:class="button-bordered">Annuler</button>
+            <input type="submit" th:id="confirmButton"  value="Confirmer">
+        </div>
+    </div>
+</form>

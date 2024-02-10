@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+</head>
+<body>
+    <div th:include="page/header"></div>
+    <!-- <div th:include="page/container-fluid"></div> -->
+    <div th:class="container-fluid">
+        <div th:include="page/sidebar"></div>
+        <div th:class="main-content">
+            <div th:include="${confirmation}"></div>
+            <div th:include="${sectionTable}"></div>
+            <div th:include="${newEdit}"></div>
+        </div>
+    </div>
+    <div th:include="page/footer"></div>
+</body>
+</html>
+<script th:inline="javascript">
+    // Fonction pour afficher les lignes correspondant à la page actuelle
+        function displayRows() {
+        // Sélection des lignes de tableau
+        const rows = tbody.querySelectorAll('tr');
+        
+        // Indice de début et de fin des lignes à afficher pour la page actuelle
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+
+        // Parcours des lignes et affichage en fonction de la page actuelle
+        rows.forEach((row, index) => {
+            if (index >= startIndex && index < endIndex) {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Mise à jour des informations de pagination
+        updatePageInfo();
+    }
+
+    // Fonction pour mettre à jour les informations de pagination (nombre total de pages)
+    function updatePageInfo() {
+        const totalRows = tbody.querySelectorAll('tr').length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+        document.querySelector('.page-info').textContent = `Page ${currentPage} sur ${totalPages}`;
+        
+        // Désactiver le bouton "Précédent" si nous sommes sur la première page
+        document.querySelector('.prev').disabled = (currentPage === 1);
+        
+        // Désactiver le bouton "Suivant" si nous sommes sur la dernière page
+        document.querySelector('.next').disabled = (currentPage === totalPages);
+    }
+
+    // Fonction pour passer à la page précédente
+    function goToPreviousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            displayRows();
+        }
+    }
+
+    // Fonction pour passer à la page suivante
+    function goToNextPage() {
+        const totalRows = tbody.querySelectorAll('tr').length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayRows();
+        }
+    }
+
+    // Ajout des écouteurs d'événements pour les boutons "Précédent" et "Suivant"
+    document.querySelector('.prev').addEventListener('click', goToPreviousPage);
+    document.querySelector('.next').addEventListener('click', goToNextPage);
+
+    // Affichage des lignes pour la première page lors du chargement initial
+    displayRows();
+
+</script>

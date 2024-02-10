@@ -1,0 +1,70 @@
+<div th:class="'dashboard bgcolored-alt'">
+            
+    <form  id="addNewTerrainForm">
+        <h2>Add New Terrain</h2>
+        <p id="error">
+        </p>
+        <div th:class="input-group">
+            <label for="nomTerrain">Nom Terrain</label>
+            <input type="text" th:id="nomTerrain" name="nomTerrain" required>
+        </div>
+        <div th:class="input-group">
+            <label for="nbParcelle">Nb Parcelle</label>
+            <input type="text" th:id="nbParcelle" name="nbParcelle" required>
+        </div>
+        <div th:class="input-group">
+            <label for="geolocalisation">Geolocalisation</label>
+            <input type="text" th:id="geolocalisation" name="geolocalisation" required>
+        </div>
+        <button type="submit" style="margin:0 auto;width: 95%;">OK</button>
+    </form>
+    <!-- <canvas th:id="salesChart" width="400" height="400"></canvas> -->
+</div>
+<script>
+    document.getElementById('addNewTerrainForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêche la soumission du formulaire par défaut
+
+        // Récupère les valeurs des champs du formulaire
+        const nomTerrain = document.getElementById('nomTerrain').value;
+        const nbParcelle= document.getElementById('nbParcelle').value;
+        const geolocalisation = document.getElementById('geolocalisation').value;
+        var errorDiv = document.getElementById('error');
+
+        // Construit un objet JSON avec les données du formulaire
+        const formData = {
+            nomTerrain: nomTerrain,
+            nbParcelle: nbParcelle,
+            geolocalisation: geolocalisation,
+            isValide: "false"
+        };
+
+        // Envoie les données du formulaire au backend Spring Boot en tant que JSON
+        fetch('/terrains', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Renvoie les données JSON du backend
+            } else {
+                error.innerHTML = "Error, try again";
+                throw new Error('huhu Error try again');
+            }
+        })
+        .then(data => {
+            // Traite les données JSON renvoyées par le backend
+            console.log(data);
+            window.location.replace("/dashboard/terrains");
+        })
+        .catch(error => {
+           // console.error('Error:', error);
+            errorDiv.classList.add("error");
+            errorDiv.style.width = "100%";
+            errorDiv.style.display = "block";
+            errorDiv.innerHTML = "Error, try again";
+        });
+    });
+</script>

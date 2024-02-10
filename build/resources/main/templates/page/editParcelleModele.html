@@ -1,0 +1,78 @@
+<div th:class="'dashboard bgcolored-alt'">
+            
+    <form  id="addNewParcelleModeleForm">
+        <h2>Modify ParcelleModele <span th:text="${idParcelleModele}"></span></h2>
+        <p id="error">
+        </p>
+        <div th:class="input-group">
+            <label for="nomParcelleModele">Nom ParcelleModele</label>
+            <input type="hidden" th:value="${idParcelleModele}" th:id="idParcelleModele" name="idParcelleModele">
+            <input type="text" th:id="nomParcelleModele" name="nomParcelleModele">
+        </div>
+        <div th:class="input-group">
+            <label for="typeCulture">Type ParcelleModele</label>
+            <select name="idTypeCulture" id="idTypeCulture">
+                <option value=""></option>
+                <th:block th:each="typeCulture, iterStat : ${typeCultures}">
+                    <option th:value="${typeCulture.getIdTypeCulture()}">
+                        <span th:text="${typeCulture.getNomTypeCulture()}"></span>
+                    </option>
+                </th:block>
+            </select>
+        </div>
+        <div th:class="button-wrap">
+            <button th:class="'button-bordered fill'"><a href="/dashboard/ParcelleModeles/types">Annuler</a></button>
+            <button type="submit" style="margin:0 auto;width: 60%;">OK</button>       
+        </div>
+        
+    </form>
+    <!-- <canvas th:id="salesChart" width="400" height="400"></canvas> -->
+</div>
+<script>
+    document.getElementById('addNewParcelleModeleForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêche la soumission du formulaire par défaut
+
+        // Récupère les valeurs des champs du formulaire
+        const idParcelleModele = document.getElementById('idParcelleModele').value;
+        const nomParcelleModele = document.getElementById('nomParcelleModele').value;
+        const idTypeCulture= document.getElementById('idTypeCulture').value;
+
+        var errorDiv = document.getElementById('error');
+
+        // Construit un objet JSON avec les données du formulaire
+        const formData = {
+            idParcelleModele: idParcelleModele,
+            nomParcelleModele: nomParcelleModele,
+            typeCulture: {idTypeCulture: idTypeCulture}
+        };
+
+        // Envoie les données du formulaire au backend Spring Boot en tant que JSON
+        fetch('/parcelles', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Renvoie les données JSON du backend
+            } else {
+                error.innerHTML = "Error, try again";
+                throw new Error('Error try again');
+            }
+        })
+        .then(data => {
+            // Traite les données JSON renvoyées par le backend
+            console.log(data);
+            window.location.replace("/dashboard/parcelles");
+        })
+        .catch(error => {
+           // console.error('Error:', error);
+            errorDiv.classList.add("error");
+            errorDiv.style.width = "100%";
+            errorDiv.style.display = "block";
+            errorDiv.innerHTML = "Error, try again";
+        });
+    });
+</script>
